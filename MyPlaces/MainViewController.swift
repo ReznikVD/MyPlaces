@@ -36,5 +36,8 @@ class MainViewController: UITableViewController {
         
         return cell
     }
-     
+    
+    // MARK: - Navigation
+    
+    @IBAction func cancelAction(_ segue: UIStoryboardSegue) {}
 }
