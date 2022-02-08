@@ -8,13 +8,23 @@
 import UIKit
 
 class NewPlaceViewController: UITableViewController {
+    
+    var currentPlace: Place?
+    var imageIsChanged = false
 
-    @IBOutlet var imageOfPlace: UIImageView!
+    @IBOutlet var placeImage: UIImageView!
+    @IBOutlet var saveButton: UIBarButtonItem!
+    @IBOutlet var placeName: UITextField!
+    @IBOutlet var placeLocation: UITextField!
+    @IBOutlet var placeType: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.tableFooterView = UIView()
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 1))
+        saveButton.isEnabled = false
+        placeName.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        setupEditScreen()
     }
     
     // MARK: Table view delegate
@@ -50,6 +60,62 @@ class NewPlaceViewController: UITableViewController {
             view.endEditing(true)
         }
     }
+    
+    func savePlace() {
+        
+        var image: UIImage?
+        
+        if imageIsChanged {
+            image = placeImage.image
+        } else {
+            image = UIImage(named: "imagePlaceholder")
+        }
+        
+        let imageData = image?.pngData()
+        
+        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData)
+        
+        if currentPlace != nil {
+            try! realm.write {
+                currentPlace?.name = newPlace.name
+                currentPlace?.location = newPlace.location
+                currentPlace?.type = newPlace.type
+                currentPlace?.imageData = newPlace.imageData
+            }
+        } else {
+            StorageManger.saveObject(newPlace)
+        }
+    }
+    
+    private func setupEditScreen() {
+        if currentPlace != nil {
+            
+            setupNavigationBar()
+            imageIsChanged = true
+            
+            guard let data = currentPlace?.imageData, let image = UIImage(data: data) else { return }
+            
+            placeImage.image = image
+            placeImage.contentMode = .scaleAspectFill
+            placeName.text = currentPlace?.name
+            placeLocation.text = currentPlace?.location
+            placeType.text = currentPlace?.type
+        }
+    }
+    
+    private func setupNavigationBar() {
+        if let topItem = navigationController?.navigationBar.topItem {
+            topItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        }
+        navigationItem.leftBarButtonItem = nil
+        title = currentPlace?.name
+        saveButton.isEnabled = true
+    }
+    
+    @IBAction func cancelAction(_ sender: UIBarButtonItem) {
+        dismiss(animated: true)
+    }
+    
 }
 
 // MARK: Text field delegate
@@ -62,10 +128,20 @@ extension NewPlaceViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+    
+    @objc private func textFieldChanged() {
+        
+        if placeName.text?.isEmpty == false {
+            saveButton.isEnabled = true
+        } else {
+            saveButton.isEnabled = false
+        }
+    }
 }
 
 // MARK: Work with image
 extension NewPlaceViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
     func chooseImagePicker(source: UIImagePickerController.SourceType) {
         
         if UIImagePickerController.isSourceTypeAvailable(source) {
@@ -80,9 +156,12 @@ extension NewPlaceViewController: UIImagePickerControllerDelegate, UINavigationC
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        imageOfPlace.image = info[.editedImage] as? UIImage
-        imageOfPlace.contentMode = .scaleToFill
-        imageOfPlace.clipsToBounds = true
+        placeImage.image = info[.editedImage] as? UIImage
+        placeImage.contentMode = .scaleToFill
+        placeImage.clipsToBounds = true
+        
+        imageIsChanged = true
+        
         dismiss(animated: true)
     }
 }
