@@ -46,28 +46,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if isFiltering {
             return filterPlaces.count
         }
-        return places.isEmpty ? 0 : places.count
+        return places.count
     }
 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         
-        var place = Place()
-        
-        if isFiltering {
-            place = filterPlaces[indexPath.row]
-        } else {
-            place = places[indexPath.row]
-        }
+        let place = isFiltering ? filterPlaces[indexPath.row] : places[indexPath.row]
         
         cell.nameLabel.text = place.name
         cell.locationLabel.text = place.location
         cell.typeLabel.text = place.type
         cell.imageOfPlace.image = UIImage(data: place.imageData!)
-        
-        cell.imageOfPlace?.layer.cornerRadius = cell.imageOfPlace.frame.size.height / 2
-        cell.imageOfPlace?.clipsToBounds = true
+        cell.cosmosView.rating = place.rating
         
         return cell
     }
@@ -79,30 +71,29 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let place = places[indexPath.row]
-        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") { (_, _) in
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {_,_,_ in
             
             StorageManger.deleteObject(place)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
-        
-        return [deleteAction]
+        let swipeActions = UISwipeActionsConfiguration(actions: [deleteAction])
+        return swipeActions
     }
+    
+    
     
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
             guard let indexPath = tableView.indexPathForSelectedRow else { return }
-            let place: Place
-            if isFiltering{
-                place = filterPlaces[indexPath.row]
-            } else {
-                place = places[indexPath.row]
-            }
+            
+            let place = isFiltering ? filterPlaces[indexPath.row] : places[indexPath.row]
             let newPlaceVC = segue.destination as! NewPlaceViewController
+            
             newPlaceVC.currentPlace = place
         }
     }
