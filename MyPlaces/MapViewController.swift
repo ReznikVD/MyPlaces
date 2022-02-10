@@ -14,14 +14,24 @@ class MapViewController: UIViewController {
     var place =  Place()
     let annotationIdentifier = "annotationIdentifier"
     let locationManager = CLLocationManager()
+    let regionInMeters = 10_000.0
     
     @IBOutlet var mapView: MKMapView!
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad() 
         mapView.delegate = self
         setupPlaceMark()
         checkLocationServices()
+    }
+    
+    @IBAction func centerViewUserLocation() {
+        
+        if let location = locationManager.location?.coordinate {
+            let region = MKCoordinateRegion(center: location, latitudinalMeters: regionInMeters, longitudinalMeters: regionInMeters)
+            
+            mapView.setRegion(region, animated: true)
+        }
     }
     
     @IBAction func closeVC() {
@@ -62,7 +72,9 @@ class MapViewController: UIViewController {
             setupLocationManager()
             checkLocationAuthorization()
         } else {
-            // create alert controller
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.showAlert(title: "Location Services are Disabled", message: "To enable go to settings")
+            }
         }
     }
     
@@ -77,7 +89,9 @@ class MapViewController: UIViewController {
             mapView.showsUserLocation = true
             break
         case .denied:
-            // Show alert controller
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.showAlert(title: "Location Services are Disabled", message: "To enable go to settings")
+            }
             break
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
@@ -88,7 +102,14 @@ class MapViewController: UIViewController {
         @unknown default:
             print("New case ia avaible")
         }
-
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default)
+        
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
     
 }

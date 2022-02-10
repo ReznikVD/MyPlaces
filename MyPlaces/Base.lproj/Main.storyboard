@@ -251,15 +251,29 @@
                                     <action selector="closeVC" destination="ogt-Ra-O5s" eventType="touchUpInside" id="aAp-oa-v8b"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XfK-fK-gPL">
+                                <rect key="frame" x="324" y="772" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="mNV-vR-hL1"/>
+                                    <constraint firstAttribute="height" constant="50" id="qDh-kR-Tfe"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="location.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="centerViewUserLocation" destination="ogt-Ra-O5s" eventType="touchUpInside" id="mcT-ea-Eeq"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Uhn-T9-gau"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="VKG-sW-sgl" firstAttribute="trailing" secondItem="Uhn-T9-gau" secondAttribute="trailing" id="1bP-EO-5d1"/>
+                            <constraint firstItem="Uhn-T9-gau" firstAttribute="trailing" secondItem="XfK-fK-gPL" secondAttribute="trailing" constant="40" id="Dt7-2g-3t6"/>
                             <constraint firstItem="0vX-1u-g6F" firstAttribute="top" secondItem="Uhn-T9-gau" secondAttribute="top" constant="40" id="Lti-kG-qje"/>
                             <constraint firstItem="Uhn-T9-gau" firstAttribute="trailing" secondItem="0vX-1u-g6F" secondAttribute="trailing" constant="40" id="Ood-92-hvT"/>
                             <constraint firstItem="VKG-sW-sgl" firstAttribute="top" secondItem="nuE-Jg-aav" secondAttribute="top" id="S8P-J1-vNe"/>
                             <constraint firstAttribute="bottom" secondItem="VKG-sW-sgl" secondAttribute="bottom" id="cwH-FR-s8X"/>
+                            <constraint firstItem="Uhn-T9-gau" firstAttribute="bottom" secondItem="XfK-fK-gPL" secondAttribute="bottom" constant="40" id="jpy-6g-9A4"/>
                             <constraint firstItem="VKG-sW-sgl" firstAttribute="leading" secondItem="Uhn-T9-gau" secondAttribute="leading" id="uzU-0M-yp9"/>
                         </constraints>
                     </view>
@@ -466,6 +480,7 @@
         <image name="Photo" width="195" height="196"/>
         <image name="emptyStar" width="255" height="256"/>
         <image name="filledStar" width="237.5" height="238"/>
+        <image name="location.fill" catalog="system" width="128" height="121"/>
         <image name="map" width="50" height="50"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
