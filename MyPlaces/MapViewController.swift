@@ -9,7 +9,13 @@ import UIKit
 import MapKit
 import CoreLocation
 
+protocol MapViewControllDelegate {
+    func getAddress(_ address: String?)
+}
+
 class MapViewController: UIViewController {
+    
+    var mapViewControllDelegate: MapViewControllDelegate?
     
     var place =  Place()
     let annotationIdentifier = "annotationIdentifier"
@@ -18,14 +24,14 @@ class MapViewController: UIViewController {
     var incomeSegueIdentifier = ""
     
     @IBOutlet var mapView: MKMapView!
-    @IBOutlet var adressLabel: UILabel!
+    @IBOutlet var addressLabel: UILabel!
     @IBOutlet var mapPinImaage: UIImageView!
     @IBOutlet var doneButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        adressLabel.text = ""
+        addressLabel.text = ""
         mapView.delegate = self
         setupMapView()
         checkLocationServices()
@@ -36,6 +42,8 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func doneButtonPressed() {
+        mapViewControllDelegate?.getAddress(addressLabel.text)
+        dismiss(animated: true)
     }
     
     @IBAction func closeVC() {
@@ -46,7 +54,7 @@ class MapViewController: UIViewController {
         if incomeSegueIdentifier == "showPlace" {
             setupPlaceMark()
             mapPinImaage.isHidden = true
-            adressLabel.isHidden = true
+            addressLabel.isHidden = true
             doneButton.isHidden = true
         }
     }
@@ -100,7 +108,7 @@ class MapViewController: UIViewController {
         switch CLLocationManager.authorizationStatus() {
         case .authorizedWhenInUse:
             mapView.showsUserLocation = true
-            if incomeSegueIdentifier == "getAdress" { showUserLocation() }
+            if incomeSegueIdentifier == "getAddress" { showUserLocation() }
             break
         case .denied:
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -189,11 +197,11 @@ extension MapViewController: MKMapViewDelegate {
             DispatchQueue.main.async {
                 
                 if streetNmae != nil && buildName != nil {
-                    self.adressLabel.text = "\(streetNmae!), \(buildName!)"
+                    self.addressLabel.text = "\(streetNmae!), \(buildName!)"
                 } else if streetNmae != nil {
-                    self.adressLabel.text = "\(streetNmae!)"
+                    self.addressLabel.text = "\(streetNmae!)"
                 } else {
-                    self.adressLabel.text = ""
+                    self.addressLabel.text = ""
                 }
                 
             }

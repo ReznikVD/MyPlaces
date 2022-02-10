@@ -131,7 +131,7 @@
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="mappin.and.ellipse" catalog="system"/>
                                                     <connections>
-                                                        <segue destination="ogt-Ra-O5s" kind="presentation" identifier="getAdress" id="EoB-Ad-RvM"/>
+                                                        <segue destination="ogt-Ra-O5s" kind="presentation" identifier="getAddress" id="EoB-Ad-RvM"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -325,7 +325,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="adressLabel" destination="tKK-X2-NnB" id="Zes-DW-ogL"/>
+                        <outlet property="addressLabel" destination="tKK-X2-NnB" id="Zes-DW-ogL"/>
                         <outlet property="doneButton" destination="yst-fK-hiA" id="sDR-Os-tq2"/>
                         <outlet property="mapPinImaage" destination="adF-l4-Egu" id="ENo-aK-5Ca"/>
                         <outlet property="mapView" destination="VKG-sW-sgl" id="Qpz-qv-tcR"/>
